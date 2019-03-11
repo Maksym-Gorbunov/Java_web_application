@@ -1,0 +1,49 @@
+<th:block th:fragment="header">
+    <!DOCTYPE html>
+    <html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8">
+        <title th:text="${title}">Web Application</title>
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+        <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+        <link rel="stylesheet" type="text/css" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+    </head>
+    <body>
+
+    <style>
+        #create_alert_message, #delete_alert_message{
+            visibility: hidden;
+            width: 50%;
+            margin: 10px auto;
+        }
+        #alert_message{
+            width: 50%;
+            margin: 10px auto;
+        }
+        #create_form, #delete_form{
+            border: 2px solid #777777;
+            border-radius: 5px;
+            padding: 15px;
+            width: 50%;
+            margin: 15px auto;
+        }
+        h2{
+            color:#777777;
+            text-align: center;
+        }
+        #cars_table, #search_table{
+            color: #777777;
+            width: 50%;
+            margin: 15px auto;
+            border: 2px solid #777777;
+        }
+        #cars_table th,td, #search_table th, td{
+            text-align: center;
+            width: 16.66%;
+        }
+        .table_header{
+            border: 2px solid #777777;
+        }
+
+    </style>
+</th:block>

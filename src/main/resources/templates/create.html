@@ -1,0 +1,102 @@
+<th:block th:replace="fragments/header" xmlns:th="http://www.w3.org/1999/xhtml"></th:block>
+<div th:replace="fragments/navbar"></div>
+
+<h2>Create</h2>
+
+<div id="create_alert_message" class="alert alert-success">Alert message</div>
+
+
+<form id="create_form" method="post" action="/create" onkeyup="isInputEmpty2(); hideAlertOnInputsWrite();">
+    <div class="form-group">
+        <label for="licensenumber_input">Licensenumber</label>
+        <input type="text" class="form-control" id="licensenumber_input" name="licensenumber_input">
+        <small id="licensenumber_input_help" class="form-text text-muted">Example: TUT 145</small>
+    </div>
+    <div class="form-group">
+        <label for="make_input">Made by</label>
+        <input type="text" class="form-control" id="make_input" name="make_input">
+        <small id="make_input_help" class="form-text text-muted">Example: Honda, Audi, Volvo</small>
+    </div>
+    <div class="form-group">
+        <label for="color_input">Color</label>
+        <input type="text" class="form-control" id="color_input" name="color_input">
+        <small id="color_input_help" class="form-text text-muted">Example: white, blue, red</small>
+    </div>
+
+
+
+
+    <button id="create_btn" type="submit" class="btn btn-primary" disabled>create</button>
+</form>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!--Show alerts on btn click-->
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    var active = [[${active_nav}]],
+        alert_type = [[${alert_type}]],
+        message = [[${message}]],
+        create_alert_message = document.getElementById("create_alert_message"),
+        licensenumber_input = document.getElementById("licensenumber_input"),
+        make_input = document.getElementById("make_input"),
+        color_input = document.getElementById("color_input");
+
+
+
+    function showCreateCarAlerts() {
+
+
+        if(message == ""){
+            create_alert_message.style.visibility = "hidden";
+        } else {
+            create_alert_message.style.visibility = "visible";
+            create_alert_message.classList.add(alert_type);
+            create_alert_message.innerHTML = message;
+        }
+
+
+
+        var element = document.getElementById(active);
+        element.classList.add("active");
+    }
+
+
+    function hideAlertOnInputsWrite() {
+        if((licensenumber_input.value.length > 0) || (make_input.value.length > 0) || (color_input.value.length > 0)){
+            create_alert_message.style.visibility = "hidden";
+        }
+    }
+    /*]]>*/
+    showCreateCarAlerts();
+</script>
+
+
+
+<!--create btn disable if any of inputs is empty-->
+<script type="text/javascript">
+    function isInputEmpty2(){
+        var licensenumber_input = document.getElementById("licensenumber_input"),
+            make_input = document.getElementById("make_input"),
+            color_input = document.getElementById("color_input"),
+            create_btn = document.getElementById("create_btn");
+
+        if((licensenumber_input.value.length > 0) && (make_input.value.length > 0) && (color_input.value.length > 0)){
+            document.getElementById("create_btn").disabled = false;
+        } else {
+            document.getElementById("create_btn").disabled = true;
+        }
+    }
+</script>
+
+<th:block th:replace="fragments/footer"></th:block>

@@ -1,0 +1,18 @@
+<th:block th:replace="fragments/header"></th:block>
+<div th:replace="fragments/navbar"></div>
+
+<h2>Cars</h2>
+<table id="cars_table" class="table table-striped">
+    <tr class="table_header">
+        <th>Make</th>
+        <th>Color</th>
+        <th>Licensenumber</th>
+    </tr>
+    <tr th:each="car : ${cars}">
+        <td th:text="${car.make}"></td>
+        <td th:text="${car.color}"></td>
+        <td th:text="${car.licensenumber}"></td>
+    </tr>
+</table>
+
+<th:block th:replace="fragments/footer"></th:block>

@@ -1,0 +1,53 @@
+<th:block th:fragment="footer">
+
+    <!--style for active navigation link-->
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        function myFunction() {
+            var active = /*[[${active_nav}]]*/ "";
+            // if(active != null || active != "undefined" || active != ""){
+            if(typeof active != 'undefined' && active && active != 'nav_find'){
+                var element = document.getElementById(active);
+                element.classList.add("active");
+            }
+        }
+        /*]]>*/
+        myFunction();
+    </script>
+
+    <!--search btn disable if input is empty-->
+    <script type="text/javascript">
+        function isInputEmpty(){
+            if(document.getElementById('search_input').value.length > 0) {
+                document.getElementById('search_btn').disabled = false;
+            } else {
+                document.getElementById('search_btn').disabled = true;
+            }
+        }
+    </script>
+
+
+
+
+    <!--search form visible on cars and search only-->
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        function hideSearchForm() {
+            var search_form = document.getElementById('search_form');
+            var active = /*[[${active_nav}]]*/ "";
+            if(active == "nav_find" || active == "nav_cars"){
+                search_form.style.display = "inline_block";
+            } else {
+                search_form.style.display = "none";
+            }
+        }
+        /*]]>*/
+
+        hideSearchForm();
+    </script>
+
+
+
+    </body>
+    </html>
+</th:block>

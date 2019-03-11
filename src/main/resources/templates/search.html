@@ -1,0 +1,43 @@
+<th:block th:replace="fragments/header"></th:block>
+<div th:replace="fragments/navbar"></div>
+
+<h2>Search</h2>
+
+<div id="alert_message" class="alert">Alert message</div>
+
+<table id="search_table" class="table table-striped">
+    <tr class="table_header">
+        <th>Make</th>
+        <th>Color</th>
+        <th>Licensenumber</th>
+    </tr>
+    <tr th:each="car : ${cars}">
+        <td th:text="${car.make}"></td>
+        <td th:text="${car.color}"></td>
+        <td th:text="${car.licensenumber}"></td>
+    </tr>
+</table>
+
+<!--Show alerts on btn click-->
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    function myFunction() {
+        var found = /*[[${found}]]*/ "";
+        var find = /*[[${find}]]*/ "";
+        // var active = /*[[${active_nav}]]*/ "";
+        var alert_message = document.getElementById("alert_message");
+        if(found > 0){
+            alert_message.classList.add("alert-success");
+            alert_message.innerHTML = "Search \"" + find +"\", founded " + found;
+        } else {
+            alert_message.classList.add("alert-danger");
+            alert_message.innerHTML = "Search \"" + find +"\", founded " + found;
+        }
+        // var element = document.getElementById(active);
+        // element.classList.add("active");
+    }
+    /*]]>*/
+    myFunction();
+</script>
+
+<th:block th:replace="fragments/footer"></th:block>
