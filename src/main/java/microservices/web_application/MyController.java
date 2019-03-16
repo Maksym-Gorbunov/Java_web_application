@@ -15,20 +15,42 @@ import org.springframework.http.HttpMethod;
 
 
 @Controller
-public class CarsController {
+public class MyController {
     RestTemplate restTemplate;
 
     //Constructor
-    public CarsController(RestTemplate restTemplate) {
+    public MyController(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
+    }
+
+    @PostMapping("/login")
+    public String loginPost(@ModelAttribute User user, Model model){
+        RestTemplate rt = new RestTemplate();
+        Boolean response = rt.postForObject(Config.restUrl + "login", user, Boolean.class);
+        if(response){
+            Security.access = true;
+            return "index";
+        }
+        model.addAttribute("access", "false");
+        return "login";
+    }
+
+    @GetMapping("/login")
+    public String loginGet(Model model) {
+        model.addAttribute("active_nav", "nav_login");
+        model.addAttribute("title", "Login");
+        return "login";
     }
 
     //Show home page
     @GetMapping("/index")
     public String index(Model model){
-        model.addAttribute("title", "index");
-        model.addAttribute("springVersion", SpringVersion.getVersion());
-        return "index";
+        if(Security.access){
+            model.addAttribute("title", "index");
+            model.addAttribute("springVersion", "Spring version: "+SpringVersion.getVersion());
+            return "index";
+        }
+        return "login";
     }
 
     //Show page for delete car by licensenumber
@@ -63,14 +85,6 @@ public class CarsController {
         model.addAttribute("title", "Delete");
         return "delete";
       }
-
-
-    @GetMapping("/login")
-    public String form(Model model) {
-        model.addAttribute("active_nav", "nav_login");
-        model.addAttribute("title", "Login");
-        return "login";
-    }
 
     //Add new car to rest_application db
     @PostMapping("/create")
