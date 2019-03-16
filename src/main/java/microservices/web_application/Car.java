@@ -1,18 +1,25 @@
-package microservices.web_application.model;
+package microservices.web_application;
 
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.hibernate.validator.constraints.Length;
 
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 public class Car implements Serializable {
-    @JsonProperty("licensenumber")
+//    @JsonProperty("licensenumber")
+
+    @NotNull
+//    @Length(min=6, message = "licensenumber not valid, ex.TUT153")
+    private String make;
+    @NotNull
     private String licensenumber;
 
-    @JsonProperty("make")
-    private String make;
+//    @JsonProperty("make")
+//    @Length(min=6, message = "color not valid")
 
-    @JsonProperty("color")
+    @NotNull
     private String color;
     public static final long serialVersionUID = 11L;
 

@@ -1,10 +1,8 @@
 package microservices.web_application;
 
-import microservices.web_application.model.Car;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-import org.springframework.context.annotation.Bean;
 import org.springframework.core.SpringVersion;
 
 
