@@ -23,12 +23,19 @@ public class MyController {
         this.restTemplate = restTemplate;
     }
 
+    @GetMapping("/logout")
+    public String logoutPost(){
+        Security.access = false;
+        return "login";
+    }
+
     @PostMapping("/login")
     public String loginPost(@ModelAttribute User user, Model model){
         RestTemplate rt = new RestTemplate();
         Boolean response = rt.postForObject(Config.restUrl + "login", user, Boolean.class);
         if(response){
             Security.access = true;
+            model.addAttribute("springVersion", "Spring version: "+SpringVersion.getVersion());
             return "index";
         }
         model.addAttribute("access", "false");
@@ -53,87 +60,113 @@ public class MyController {
         return "login";
     }
 
+    //Show home page
+    @GetMapping("/")
+    public String root(Model model){
+        if(Security.access){
+            model.addAttribute("title", "index");
+            model.addAttribute("springVersion", "Spring version: "+SpringVersion.getVersion());
+            return "index";
+        }
+        return "login";
+    }
+
     //Show page for delete car by licensenumber
     @GetMapping("/delete")
     public String deleteGet(Model model){
-        model.addAttribute("message", "");
-        model.addAttribute("active_nav", "nav_delete");
-        model.addAttribute("title", "Delete");
-        return "delete";
+        if(Security.access){
+            model.addAttribute("message", "");
+            model.addAttribute("active_nav", "nav_delete");
+            model.addAttribute("title", "Delete");
+            return "delete";
+        }
+        return "login";
     }
 
     //Delete car from rest application db by licensenumber
     @PostMapping("/delete")
     public String deletePost(@RequestParam("licensenumber") String licensenumber,Model model) throws IOException {
-        RestTemplate rt = new RestTemplate();
-        ResponseEntity<String> responseEntity = rt.exchange(Config.restUrl + "cars/" + licensenumber, HttpMethod.DELETE, null, String.class);
-        String response = responseEntity.getBody();
-        String message = "";
-        String alert_type = "";
-        if (!response.equals("0")) {
-            message = "\"" + licensenumber + "\" was successfully deleted from Rest database";
-            alert_type = "alert-success";
-            System.out.println(message);
-        } else {
-            message = "\"" + licensenumber + "\" was not found in Rest database";
-            alert_type = "alert-warning";
-            System.out.println(message);
-        }
-        model.addAttribute("alert_type", alert_type);
-        model.addAttribute("message", message);
-        model.addAttribute("active_nav", "nav_delete");
-        model.addAttribute("title", "Delete");
-        return "delete";
-      }
-
-    //Add new car to rest_application db
-    @PostMapping("/create")
-    public String cratePost(@Valid @ModelAttribute Car car, BindingResult bindingResult, Model model){
-        if(!bindingResult.hasErrors()){
+        if(Security.access){
             RestTemplate rt = new RestTemplate();
-            Boolean response = rt.postForObject(Config.restUrl + "cars", car, Boolean.class);
+            ResponseEntity<String> responseEntity = rt.exchange(Config.restUrl + "cars/" + licensenumber, HttpMethod.DELETE, null, String.class);
+            String response = responseEntity.getBody();
             String message = "";
             String alert_type = "";
-            if(response){
-                message = "\""+ car.getLicensenumber() +"\" was successfully added to Rest database";
+            if (!response.equals("0")) {
+                message = "\"" + licensenumber + "\" was successfully deleted from Rest database";
                 alert_type = "alert-success";
                 System.out.println(message);
-            } else{
-                message = "\""+ car.getLicensenumber() +"\" already exist in Rest database";
+            } else {
+                message = "\"" + licensenumber + "\" was not found in Rest database";
                 alert_type = "alert-warning";
                 System.out.println(message);
             }
             model.addAttribute("alert_type", alert_type);
             model.addAttribute("message", message);
-            model.addAttribute("active_nav", "nav_create");
-            model.addAttribute("title", "Create");
-            return "create";
-        } else{
-            model.addAttribute("title", "Create");
-            model.addAttribute("errors", bindingResult.getAllErrors());
-            return "error";
+            model.addAttribute("active_nav", "nav_delete");
+            model.addAttribute("title", "Delete");
+            return "delete";
         }
+        return "login";
+    }
+
+    //Add new car to rest_application db
+    @PostMapping("/create")
+    public String cratePost(@Valid @ModelAttribute Car car, BindingResult bindingResult, Model model){
+        if(Security.access){
+            if(!bindingResult.hasErrors()){
+                RestTemplate rt = new RestTemplate();
+                Boolean response = rt.postForObject(Config.restUrl + "cars", car, Boolean.class);
+                String message = "";
+                String alert_type = "";
+                if(response){
+                    message = "\""+ car.getLicensenumber() +"\" was successfully added to Rest database";
+                    alert_type = "alert-success";
+                    System.out.println(message);
+                } else{
+                    message = "\""+ car.getLicensenumber() +"\" already exist in Rest database";
+                    alert_type = "alert-warning";
+                    System.out.println(message);
+                }
+                model.addAttribute("alert_type", alert_type);
+                model.addAttribute("message", message);
+                model.addAttribute("active_nav", "nav_create");
+                model.addAttribute("title", "Create");
+                return "create";
+            } else{
+                model.addAttribute("title", "Create");
+                model.addAttribute("errors", bindingResult.getAllErrors());
+                return "error";
+            }
+        }
+        return "login";
     }
 
     //Show page for adding new car
     @GetMapping("/create")
     public String createGet(Model model){
-        model.addAttribute("message", "");
-        model.addAttribute("active_nav", "nav_create");
-        model.addAttribute("title", "Create");
-        return "create";
+        if(Security.access){
+            model.addAttribute("message", "");
+            model.addAttribute("active_nav", "nav_create");
+            model.addAttribute("title", "Create");
+            return "create";
+        }
+        return "login";
     }
 
     //Show page with all cars from rest_application db
     @GetMapping("/cars")
     public String getAllCars(Model model) throws IOException {
-        URL oracle = new URL(Config.restUrl + "cars");
-        BufferedReader in = new BufferedReader(new InputStreamReader(oracle.openStream()));
-        Car[] cars = new Gson().fromJson(in, Car[].class);
-        model.addAttribute("active_nav", "nav_cars");
-        model.addAttribute("cars", cars);
-        model.addAttribute("title", "Cars");
-        return "cars";
+        if(Security.access){
+            URL oracle = new URL(Config.restUrl + "cars");
+            BufferedReader in = new BufferedReader(new InputStreamReader(oracle.openStream()));
+            Car[] cars = new Gson().fromJson(in, Car[].class);
+            model.addAttribute("active_nav", "nav_cars");
+            model.addAttribute("cars", cars);
+            model.addAttribute("title", "Cars");
+            return "cars";
+        }
+        return "login";
     }
 
     //Search all cars by any field
